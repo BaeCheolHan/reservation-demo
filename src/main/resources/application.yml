@@ -1,0 +1,13 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        trace: true
+server:
+  tomcat:
+    accesslog:
+      pattern: "%{yyyy-MM-ddHH:mm:ss}t\t%s\t%r\t%{User-Agent}i\t%{Referer}i\t%a\t%b"
+      enabled: true
+
