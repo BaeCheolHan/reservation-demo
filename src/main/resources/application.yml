@@ -5,6 +5,24 @@ spring:
       path: /h2
       settings:
         trace: true
+  jpa:
+    database: h2
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/test
+    username: sa
+    password:
+
+  freemarker:
+    charset: UTF-8
+    enabled: true
+    suffix: .ftl
+    template-loader-path: classpath:/templates
+
 server:
   tomcat:
     accesslog:
