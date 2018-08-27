@@ -3,33 +3,35 @@ package com.demo.reservation.web.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.io.IOException;
+
 @Getter
-public class NoContentException extends RuntimeException {
+public class NoContentException extends IOException {
 
     private final HttpStatus status = HttpStatus.NO_CONTENT;
-    private String message;
+    private       String     message;
 
     public NoContentException(String message) {
+
         this.message = message;
     }
 
     public NoContentException(String message, String message1) {
+
         super(message);
         this.message = message1;
     }
 
     public NoContentException(String message, Throwable cause, String message1) {
+
         super(message, cause);
         this.message = message1;
     }
 
     public NoContentException(Throwable cause, String message) {
+
         super(cause);
         this.message = message;
     }
 
-    public NoContentException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String message1) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.message = message1;
-    }
 }

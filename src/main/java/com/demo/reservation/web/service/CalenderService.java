@@ -1,27 +1,47 @@
 package com.demo.reservation.web.service;
 
+import com.demo.reservation.web.entity.Reservation;
+import com.demo.reservation.web.entity.Room;
+import com.demo.reservation.web.exception.NoContentException;
+import com.demo.reservation.web.pojo.Calendar;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class CalenderService {
 
-    public List<Date> findMonthlyMapByDate(Date date) {
+    private ReservationService reservationService;
+    private RoomService        roomService;
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+    public CalenderService(ReservationService reservationService, RoomService roomService) {
 
-        List<Date> dates = new ArrayList<>();
-        for (int i = 0; i < calendar.getMaximum(Calendar.DAY_OF_MONTH); i++) {
-            calendar.set(Calendar.DAY_OF_MONTH, i);
-            dates.add(calendar.getTime());
-        }
-
-        System.out.println(String.format("calendar : [%d]", dates.size()));
-        return dates;
+        this.reservationService = reservationService;
+        this.roomService = roomService;
     }
+
+    public Calendar findDailyCalenderByDay(LocalDate day) {
+
+        try {
+            List<Room> rooms = roomService.findAll();
+            List<Reservation> reservations = reservationService.findAllByDay(day);
+            Calendar calendar = new Calendar(day, rooms);
+            reservations.forEach(calendar::addReservation);
+            calendar.removeEmptyRows();
+            return calendar;
+        } catch (NoContentException e) {
+            // generate empty calendar
+            try {
+                List<Room> rooms = roomService.findAll();
+                Calendar calendar = new Calendar(rooms);
+                calendar.removeEmptyRows();
+                return calendar;
+            } catch (NoContentException e1) {
+                throw new IllegalStateException("logical Error");
+            }
+
+        }
+    }
+
 }
