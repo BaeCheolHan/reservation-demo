@@ -6,9 +6,9 @@ import com.demo.reservation.web.exception.IllegalBodyException;
 import com.demo.reservation.web.pojo.request.ReservationCreateBody;
 import com.demo.reservation.web.service.ReservationService;
 import com.demo.reservation.web.util.TimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/reservation")
 public class ReservationResource {
 
+    private Logger             logger = LoggerFactory.getLogger(this.getClass());
     private ReservationService reservationService;
 
     public ReservationResource(ReservationService reservationService) {
@@ -29,30 +30,21 @@ public class ReservationResource {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("/{id}")
-    public Reservation findById(@PathVariable("id") Long id) {
-
-        return reservationService.findById(id);
-    }
-
-    @GetMapping
-    public List<Reservation> findAll() {
-
-        return null;
-    }
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void create(@RequestBody @Valid ReservationCreateBody body) throws ConflictException, IllegalBodyException {
+    public List<Reservation> create(@RequestBody @Valid ReservationCreateBody body) throws ConflictException, IllegalBodyException {
 
-        System.out.println(body);
+        logger.debug("reservation create > [{}]", body);
         boolean validTime = TimeUtils.validMinute(body.getStartTime()) && TimeUtils.validMinute(body.getEndTime());
         boolean validTimeRange = TimeUtils.validRange(body.getStartTime(), body.getEndTime());
 
         if (validTime && validTimeRange) {
-            reservationService.create(body);
+
+            return reservationService.create(body);
         } else {
-            throw new IllegalBodyException(String.format("[validTimeField:%b / validTimeRange:%b] entered invalid time values.", validTime, validTimeRange));
+
+            String message = !validTime ? "entered invalid time values. 'minute' field required (00 or 30 )." : "entered invalid time range values. 'start time' must greater than 'end time'.";
+            throw new IllegalBodyException(message);
         }
     }
 

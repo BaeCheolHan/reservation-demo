@@ -5,6 +5,7 @@ import com.demo.reservation.web.entity.User;
 import com.demo.reservation.web.exception.NoContentException;
 import com.demo.reservation.web.exception.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -27,7 +28,7 @@ public class UserService {
     public List<User> findAll() throws NoContentException {
 
         List<User> result = dao.findAll();
-        if (result.isEmpty()) {
+        if (CollectionUtils.isEmpty(result)) {
             throw new NoContentException("User is Empty.");
         }
 

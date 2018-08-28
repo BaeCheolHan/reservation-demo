@@ -5,6 +5,7 @@ import com.demo.reservation.web.entity.Room;
 import com.demo.reservation.web.exception.NoContentException;
 import com.demo.reservation.web.exception.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -23,7 +24,7 @@ public class RoomService {
 
         List<Room> result = dao.findAll();
 
-        if (result.isEmpty()) {
+        if (CollectionUtils.isEmpty(result)) {
             throw new NoContentException("empty!");
         }
         return result;
@@ -37,10 +38,15 @@ public class RoomService {
     @PostConstruct
     public void initRooms() {
 
-        for (int i = 0; i < 10; i++) {
-            Room room = new Room();
-            room.setName(String.format("room-%c", 'A' + i));
-            dao.save(room);
+        try {
+            for (int i = 0; i < 10; i++) {
+                Room room = new Room();
+                room.setName(String.format("room-%c", 'A' + i));
+                dao.save(room);
+            }
+
+        } catch (Exception e) {
+            // ignore, already init room.
         }
 
     }

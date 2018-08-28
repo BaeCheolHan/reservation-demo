@@ -8,7 +8,7 @@ spring:
   jpa:
     database: h2
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     show-sql: true
 
   datasource:
@@ -24,9 +24,8 @@ spring:
     template-loader-path: classpath:/templates
     cache: false
 
-server:
-  tomcat:
-    accesslog:
-      pattern: "%{yyyy-MM-ddHH:mm:ss}t\t%s\t%r\t%{User-Agent}i\t%{Referer}i\t%a\t%b"
-      enabled: true
+logging:
 
+  level:
+    root: warn
+    com.demo.reservation: debug

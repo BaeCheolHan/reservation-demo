@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationCustomDAOImpl extends BaseCustomDAO implements ReservationCustomDAO {
@@ -37,9 +38,9 @@ public class ReservationCustomDAOImpl extends BaseCustomDAO implements Reservati
 
     @Transactional
     @Override
-    public void bulkInsert(List<Integer> cellSequences, Integer repeatCount, LocalDate day, Room room, User user) {
+    public List<Reservation> bulkInsert(List<Integer> cellSequences, Integer repeatCount, LocalDate day, Room room, User user) {
 
-//        super.entityManager.getTransaction().begin();
+        List<Reservation> result = new ArrayList<>();
         try {
 
             for (Integer week = 0; week <= repeatCount; week++) {
@@ -53,22 +54,18 @@ public class ReservationCustomDAOImpl extends BaseCustomDAO implements Reservati
                     reservation.setRepeatCount(repeatCount);
                     reservation.setCellSequence(sequence);
                     super.entityManager.persist(reservation);
+                    result.add(reservation);
                 });
 
                 entityManager.flush();
                 entityManager.clear();
             }
 
+            return result;
         } catch (ConstraintViolationException e) {
             // 동시에 Insert 되어 UK 충돌이 날 경우, 409 처리
-//            entityManager.getTransaction().rollback();
-            System.out.println("what the!" + e.getMessage());
             throw new ConflictException(room.getId(), Reservation.class);
-        } finally {
-
-//            entityManager.close();
         }
-        System.out.println("insert~");
 
     }
 }

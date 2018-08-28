@@ -67,7 +67,7 @@
                 <label for="start-time">Start Time</label>
             </td>
             <td>
-                <input type="time" id="start-time" name="startTime">
+                <input type="time" id="start-time" name="startTime" step="1800" required>
             </td>
         </tr>
         <tr>
@@ -75,7 +75,7 @@
                 <label for="end-time">End Time</label>
             </td>
             <td>
-                <input type="time" id="end-time" name="endTime" required pattern="[0-9]{2}:[30|00]">
+                <input type="time" id="end-time" name="endTime" step="1800" required>
             </td>
             <td>
                 <span class="validity"></span>
@@ -118,7 +118,7 @@
     <button class="btn success" type="submit" id="submit">submit</button>
 </div>
 
-<table style="border: 1px solid">
+<table style="border: 1px solid" width="100%">
 <#if calender??>
     <tr>
     <#list calender.header as roomName>
@@ -207,7 +207,5 @@
                 })
             });
 </script>
-
-<#--<script src="/index.js"></script>-->
 </body>
 </html>

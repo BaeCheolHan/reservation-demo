@@ -2,6 +2,7 @@ package com.demo.reservation.web.service;
 
 import com.demo.reservation.web.entity.Reservation;
 import com.demo.reservation.web.entity.Room;
+import com.demo.reservation.web.exception.InternalException;
 import com.demo.reservation.web.exception.NoContentException;
 import com.demo.reservation.web.pojo.Calendar;
 import com.demo.reservation.web.util.CalendarBuilder;
@@ -22,7 +23,7 @@ public class CalenderService {
         this.roomService = roomService;
     }
 
-    public Calendar findDailyCalenderByDay(LocalDate day) {
+    public Calendar findDailyCalenderByDay(LocalDate day) throws InternalException {
 
         try {
             List<Room> rooms = roomService.findAll();
@@ -36,7 +37,7 @@ public class CalenderService {
 
                 return new CalendarBuilder().rooms(rooms).build();
             } catch (NoContentException e1) {
-                throw new IllegalStateException("logical Error");
+                throw new InternalException("rooms could not be null or empty.");
             }
 
         }

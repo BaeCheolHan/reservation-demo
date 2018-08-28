@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class NotFoundException extends RuntimeException {
+public class NotFoundException extends RuntimeException implements HttpServerException {
 
     private final HttpStatus status = HttpStatus.NOT_FOUND;
     private       String     message;

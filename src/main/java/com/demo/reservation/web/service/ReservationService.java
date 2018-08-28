@@ -6,10 +6,12 @@ import com.demo.reservation.web.entity.Room;
 import com.demo.reservation.web.entity.User;
 import com.demo.reservation.web.exception.ConflictException;
 import com.demo.reservation.web.exception.NoContentException;
-import com.demo.reservation.web.exception.NotFoundException;
 import com.demo.reservation.web.pojo.request.ReservationCreateBody;
 import com.demo.reservation.web.util.TimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,6 +20,7 @@ import java.util.List;
 @Service
 public class ReservationService {
 
+    private Logger         logger = LoggerFactory.getLogger(this.getClass());
     private ReservationDAO dao;
     private RoomService    roomService;
     private UserService    userService;
@@ -29,27 +32,23 @@ public class ReservationService {
         this.userService = userService;
     }
 
-    public Reservation findById(Long id) {
-
-        return dao.findById(id).orElseThrow(() -> new NotFoundException(id, Reservation.class));
-    }
-
     public List<Reservation> findAllByDay(LocalDate day) throws NoContentException {
 
         List<Reservation> result = dao.findAllByDay(day);
-        if (result.isEmpty()) {
+        if (CollectionUtils.isEmpty(result)) {
             throw new NoContentException("empty!");
         }
 
         return result;
     }
 
-    public void create(ReservationCreateBody body) {
+    public List<Reservation> create(ReservationCreateBody body) {
 
-        create(body.getRoomId(), body.getUserId(), body.getDay(), body.getStartTime(), body.getEndTime(), body.getRepeatCount());
+        logger.debug("reservation create > [{}]", body);
+        return create(body.getRoomId(), body.getUserId(), body.getDay(), body.getStartTime(), body.getEndTime(), body.getRepeatCount());
     }
 
-    public void create(Long roomId, Long userId, LocalDate day, LocalTime startTime, LocalTime endTime, Integer repeatCount) {
+    public List<Reservation> create(Long roomId, Long userId, LocalDate day, LocalTime startTime, LocalTime endTime, Integer repeatCount) {
 
         List<Integer> timeTableSequence = TimeUtils.getTimeTableSequence(startTime, endTime);
 
@@ -62,7 +61,7 @@ public class ReservationService {
 
         Room room = roomService.findById(roomId);
         User user = userService.findById(userId);
-        dao.bulkInsert(timeTableSequence, repeatCount, day, room, user);
+        return dao.bulkInsert(timeTableSequence, repeatCount, day, room, user);
 
     }
 }

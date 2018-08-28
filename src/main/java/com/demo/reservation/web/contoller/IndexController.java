@@ -2,6 +2,7 @@ package com.demo.reservation.web.contoller;
 
 import com.demo.reservation.web.entity.Room;
 import com.demo.reservation.web.entity.User;
+import com.demo.reservation.web.exception.InternalException;
 import com.demo.reservation.web.exception.NoContentException;
 import com.demo.reservation.web.pojo.Calendar;
 import com.demo.reservation.web.service.CalenderService;
@@ -19,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = { "/view/index", "/" })
+@RequestMapping(path = "/")
 public class IndexController {
 
     private CalenderService calenderService;
@@ -33,8 +34,8 @@ public class IndexController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String main(Model model, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) throws NoContentException {
+    @GetMapping(path = { "/view/index", "/" })
+    public String index(Model model, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) throws NoContentException, InternalException {
 
         Calendar calendar;
 

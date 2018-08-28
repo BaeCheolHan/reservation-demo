@@ -136,7 +136,7 @@ public class CalendarBuilder {
 
         List<Cell> cells = row.getCells();
         //  only have a time table value.
-        boolean isEmpty = cells.stream().filter(c -> !c.getValue().equals(" ")).anyMatch(c -> !PatternUtils.isTimeTableValue(c.getValue()));
+        boolean isEmpty = cells.stream().filter(c -> !c.getValue().equals(" ")).allMatch(c -> PatternUtils.isTimeTableValue(c.getValue()));
 
         return isEmpty;
     }
