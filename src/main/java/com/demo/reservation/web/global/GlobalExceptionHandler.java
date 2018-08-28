@@ -2,6 +2,7 @@ package com.demo.reservation.web.global;
 
 import com.demo.reservation.web.exception.ConflictException;
 import com.demo.reservation.web.exception.IllegalBodyException;
+import com.demo.reservation.web.exception.InternalException;
 import com.demo.reservation.web.exception.NoContentException;
 import com.demo.reservation.web.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalBodyException.class)
     public ResponseEntity<String> handle422(IllegalBodyException e) {
+
+        e.printStackTrace();
+        return new ResponseEntity<>(e.getMessage(), e.getStatus());
+    }
+
+    @ExceptionHandler(InternalException.class)
+    public ResponseEntity<String> handle500(InternalException e) {
 
         e.printStackTrace();
         return new ResponseEntity<>(e.getMessage(), e.getStatus());

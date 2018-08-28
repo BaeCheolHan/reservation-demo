@@ -17,7 +17,7 @@ public class TimeUtils {
         return localDateTime;
     }
 
-    public static List<Integer> getCellSequences(LocalTime startTime, LocalTime endTime) {
+    public static List<Integer> getTimeTableSequence(LocalTime startTime, LocalTime endTime) {
 
         int startTimeToMin = (startTime.getHour() * 60) + (startTime.getMinute());
         int endTimeToSec = (endTime.getHour() * 60) + (endTime.getMinute());
@@ -41,9 +41,8 @@ public class TimeUtils {
         Integer min = sequence * 30;
         LocalTime startTime = current.plusMinutes(min);
         LocalTime endTime = startTime.plusMinutes(30);
-        //        System.out.println(String.format("SEQ > [%d] , PARSE > [%s]", sequence, String.format("%s ~ %s", startTime.format(DateTimeFormatter.ofPattern("HH:mm")), endTime.format(DateTimeFormatter.ofPattern("HH:mm")))));
-        return String.format("%s ~ %s", startTime.format(DateTimeFormatter.ofPattern("HH:mm")), endTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 
+        return String.format("%s ~ %s", startTime.format(DateTimeFormatter.ofPattern("HH:mm")), endTime.format(DateTimeFormatter.ofPattern("HH:mm")));
     }
 
     public static boolean validMinute(LocalTime localTime) {

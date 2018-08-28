@@ -4,6 +4,7 @@ import com.demo.reservation.web.entity.Reservation;
 import com.demo.reservation.web.entity.Room;
 import com.demo.reservation.web.exception.NoContentException;
 import com.demo.reservation.web.pojo.Calendar;
+import com.demo.reservation.web.util.CalendarBuilder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,17 +27,14 @@ public class CalenderService {
         try {
             List<Room> rooms = roomService.findAll();
             List<Reservation> reservations = reservationService.findAllByDay(day);
-            Calendar calendar = new Calendar(day, rooms);
-            reservations.forEach(calendar::addReservation);
-            calendar.removeEmptyRows();
-            return calendar;
+
+            return new CalendarBuilder().rooms(rooms).reservations(reservations).build();
         } catch (NoContentException e) {
             // generate empty calendar
             try {
                 List<Room> rooms = roomService.findAll();
-                Calendar calendar = new Calendar(rooms);
-                calendar.removeEmptyRows();
-                return calendar;
+
+                return new CalendarBuilder().rooms(rooms).build();
             } catch (NoContentException e1) {
                 throw new IllegalStateException("logical Error");
             }

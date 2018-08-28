@@ -4,9 +4,9 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class InternalException extends Exception {
+public class InternalException extends IllegalStateException {
 
-    private final HttpStatus status = HttpStatus.CONFLICT;
+    private final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     private       String     message;
 
     public InternalException(Object id, Class type) {
@@ -36,11 +36,5 @@ public class InternalException extends Exception {
 
         super(cause);
         this.message = message;
-    }
-
-    public InternalException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String message1) {
-
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.message = message1;
     }
 }

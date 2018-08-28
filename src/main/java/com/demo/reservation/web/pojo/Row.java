@@ -2,26 +2,28 @@ package com.demo.reservation.web.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.LinkedList;
 
 @Getter
 @Setter
-public class CalendarRow {
+@ToString
+public class Row {
 
-    private LinkedList<CalendarCell> cells;
+    private LinkedList<Cell> cells;
 
-    public CalendarRow() {
+    public Row() {
 
         cells = new LinkedList<>();
     }
 
-    public void addLast(CalendarCell cell) {
+    public void addLast(Cell cell) {
 
         cells.addLast(cell);
     }
 
-    public void addFirst(CalendarCell cell) {
+    public void addFirst(Cell cell) {
 
         cells.addFirst(cell);
     }

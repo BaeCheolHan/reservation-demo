@@ -129,7 +129,7 @@
     <#list calender.rows as row>
     <tr>
         <#list row.cells as cell>
-            <td style="border: 1px solid aqua">${cell.owner}</td>
+            <td style="border: 1px solid aqua">${cell.value}</td>
         </#list>
     </tr>
     </#list>
