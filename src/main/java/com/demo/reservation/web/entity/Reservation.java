@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table(name = "Reservation", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "day", "cellSequence", "room_id" }) }
+        @UniqueConstraint(columnNames = { "day", "rowSequence", "room_id" }) }
 )
 public class Reservation {
 
@@ -39,14 +39,8 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDate day;
 
-    /**
-     * 0 : 00:00 ~ 00:30
-     * 1 : 00:30 ~ 01:00
-     * value : start time to minutes / 30
-     * ex ) : 13:00 ~ 13:30  -> 13 * 60 / 30 = 26
-     */
     @Column(nullable = false)
-    private Integer cellSequence;
+    private Integer rowSequence;
 
     @Column(nullable = false)
     private Integer repeatCount;

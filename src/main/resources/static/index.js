@@ -1,4 +1,3 @@
-
 // init day picker
 let dateInputBox = document.getElementById('current-date');
 dateInputBox.addEventListener("change", function (ev) {
@@ -23,9 +22,6 @@ for (i = 0; i < acc.length; i++) {
 // init submit
 let submitButton = document.getElementById('submit');
 submitButton.addEventListener("click",
-    // function (ev) {
-
-
     function () {
         let params = {
             startTime: document.getElementById('start-time').value,
@@ -52,16 +48,5 @@ submitButton.addEventListener("click",
             }
 
         })
-// const http = new XMLHttpRequest();
-// http.open('POST', '/api/reservation');
-// http.setRequestHeader('Content-Type', 'application/json');
-// http.send(JSON.stringify(params));
-//
-// http.onload = function () {
-//     console.log(http.responseText);
-//     console.log(http.response.statusCode);
-//     console.log(http.response.statusMessage);
-//     console.log(http.response.statusText);
-// }
     })
 ;

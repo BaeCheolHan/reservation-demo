@@ -110,7 +110,7 @@
                 <label>Repeat</label>
             </td>
             <td>
-                <input type="number" id="repeat-count" name="repeatCount" value="0">
+                <input type="number" id="repeat-count" name="repeatCount" min="1" value="1">
             </td>
         </tr>
     </table>

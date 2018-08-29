@@ -17,6 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(IndexController.class)
 public class IndexControllerTest {
@@ -40,10 +43,22 @@ public class IndexControllerTest {
     }
 
     @Test
-    public void test_requestMapping() throws Exception {
+    public void test_currentDateView() throws Exception {
+
+        String expectDateValue = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
 
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("</body>")));
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(expectDateValue)));
+    }
+
+    @Test
+    public void test_specificDateView() throws Exception {
+
+        String expectDateValue = LocalDate.of(1989, 9, 11).format(DateTimeFormatter.ISO_DATE);
+
+        mvc.perform(MockMvcRequestBuilders.get("/").param("date", expectDateValue).accept(MediaType.TEXT_HTML))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(expectDateValue)));
     }
 }

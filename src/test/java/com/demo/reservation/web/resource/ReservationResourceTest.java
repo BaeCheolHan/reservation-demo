@@ -2,6 +2,7 @@ package com.demo.reservation.web.resource;
 
 import com.demo.reservation.web.entity.Reservation;
 import com.demo.reservation.web.exception.ConflictException;
+import com.demo.reservation.web.exception.IllegalBodyException;
 import com.demo.reservation.web.exception.InternalException;
 import com.demo.reservation.web.pojo.request.ReservationCreateBody;
 import com.demo.reservation.web.service.ReservationService;
@@ -33,8 +34,9 @@ public class ReservationResourceTest {
     private MockMvc mvc;
 
     @MockBean
-    private ReservationService reservationService;
+    private ReservationService service;
 
+    private ReservationResource   resource;
     private String                testCreateBodyJson;
     private ReservationCreateBody testCreateBodyPojo;
 
@@ -49,7 +51,7 @@ public class ReservationResourceTest {
                 + "  \"startTime\": \"01:30\",\n"
                 + "  \"endTime\": \"02:30\",\n"
                 + "  \"day\": \"2018-08-27\",\n"
-                + "  \"repeatCount\": 0\n"
+                + "  \"repeatCount\": 1\n"
                 + "}";
 
         testCreateBodyPojo = new ReservationCreateBody();
@@ -58,7 +60,24 @@ public class ReservationResourceTest {
         testCreateBodyPojo.setStartTime(LocalTime.of(1, 30));
         testCreateBodyPojo.setEndTime(LocalTime.of(2, 30));
         testCreateBodyPojo.setDay(LocalDate.of(2018, 8, 27));
-        testCreateBodyPojo.setRepeatCount(0);
+        testCreateBodyPojo.setRepeatCount(1);
+
+        resource = new ReservationResource(service);
+    }
+
+    @Test(expected = IllegalBodyException.class)
+    public void test_UnprocessableEntityByInvalidTimeFormat() {
+
+        testCreateBodyPojo.setStartTime(LocalTime.of(1, 31));
+        resource.create(testCreateBodyPojo);
+    }
+
+    @Test(expected = IllegalBodyException.class)
+    public void test_UnprocessableEntityByInvalidTimeRange() {
+
+        testCreateBodyPojo.setStartTime(LocalTime.of(1, 30));
+        testCreateBodyPojo.setEndTime(LocalTime.of(0, 30));
+        resource.create(testCreateBodyPojo);
     }
 
     @Test
@@ -77,7 +96,7 @@ public class ReservationResourceTest {
     @Test
     public void test_conflict() throws Exception {
 
-        given(reservationService.create(testCreateBodyPojo)).willThrow(new ConflictException(1, Reservation.class));
+        given(service.create(testCreateBodyPojo)).willThrow(new ConflictException(1, Reservation.class));
 
         mvc.perform(MockMvcRequestBuilders.post("/api/reservation")
                 .accept(MediaType.APPLICATION_JSON)
@@ -93,7 +112,7 @@ public class ReservationResourceTest {
 
         Exception[] exceptions = { new InternalException("error test!@!@SDAFASDF"), new IllegalStateException("error test,,,,,,,,,,!!") };
 
-        given(reservationService.create(testCreateBodyPojo)).willThrow(exceptions);
+        given(service.create(testCreateBodyPojo)).willThrow(exceptions);
 
         for (Exception exception : exceptions) {
             mvc.perform(MockMvcRequestBuilders.post("/api/reservation")
@@ -104,7 +123,28 @@ public class ReservationResourceTest {
                     .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.equalTo("An unrecognized error occurred.")))
                     .andDo(print());
         }
+    }
 
+    @Test
+    public void test_badRequest() throws Exception {
+        // override repeatCount : 1 -> 0
+
+        testCreateBodyJson = "{\n"
+                + "  \"roomId\": 1,\n"
+                + "  \"userId\": 11,\n"
+                + "  \"startTime\": \"01:30\",\n"
+                + "  \"endTime\": \"02:30\",\n"
+                + "  \"day\": \"2018-08-27\",\n"
+                + "  \"repeatCount\": 0\n"
+                + "}";
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/reservation")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testCreateBodyJson)
+        )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(print());
     }
 
 }

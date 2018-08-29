@@ -14,33 +14,4 @@ public class NotFoundException extends RuntimeException implements HttpServerExc
         this.message = String.format("[%s] for [%s] is not exist in DB. please check one more time.",
                 type.getSimpleName(), id.toString());
     }
-
-    public NotFoundException(String message) {
-
-        this.message = message;
-    }
-
-    public NotFoundException(String message, String message1) {
-
-        super(message);
-        this.message = message1;
-    }
-
-    public NotFoundException(String message, Throwable cause, String message1) {
-
-        super(message, cause);
-        this.message = message1;
-    }
-
-    public NotFoundException(Throwable cause, String message) {
-
-        super(cause);
-        this.message = message;
-    }
-
-    public NotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String message1) {
-
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.message = message1;
-    }
 }

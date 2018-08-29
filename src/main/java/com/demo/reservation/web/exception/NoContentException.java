@@ -13,23 +13,4 @@ public class NoContentException extends Exception implements HttpServerException
 
         this.message = message;
     }
-
-    public NoContentException(String message, String message1) {
-
-        super(message);
-        this.message = message1;
-    }
-
-    public NoContentException(String message, Throwable cause, String message1) {
-
-        super(message, cause);
-        this.message = message1;
-    }
-
-    public NoContentException(Throwable cause, String message) {
-
-        super(cause);
-        this.message = message;
-    }
-
 }

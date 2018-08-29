@@ -22,7 +22,7 @@ public class ReservationCustomDAOImpl extends BaseCustomDAO implements Reservati
     }
 
     @Override
-    public boolean hasConflict(Long roomId, LocalDate day, List<Integer> cellSequences) {
+    public boolean hasConflict(Long roomId, LocalDate day, List<Integer> rowSequence) {
 
         QReservation reservation = QReservation.reservation;
         JPAQuery query = new JPAQuery(super.entityManager);
@@ -30,7 +30,7 @@ public class ReservationCustomDAOImpl extends BaseCustomDAO implements Reservati
         query.from(reservation)
                 .where(reservation.day.eq(day)
                         .and(reservation.room.id.eq(roomId))
-                        .and(reservation.cellSequence.in(cellSequences))
+                        .and(reservation.rowSequence.in(rowSequence))
                 );
 
         return query.count() > 0;
@@ -38,28 +38,28 @@ public class ReservationCustomDAOImpl extends BaseCustomDAO implements Reservati
 
     @Transactional
     @Override
-    public List<Reservation> bulkInsert(List<Integer> cellSequences, Integer repeatCount, LocalDate day, Room room, User user) {
+    public List<Reservation> bulkInsert(List<Integer> rowSequence, Integer repeatCount, LocalDate day, Room room, User user) {
 
         List<Reservation> result = new ArrayList<>();
         try {
 
-            for (Integer week = 0; week <= repeatCount; week++) {
+            for (Integer week = 0; week < repeatCount; week++) {
                 final LocalDate finalDay = day.plusWeeks(week);
 
-                cellSequences.forEach(sequence -> {
+                rowSequence.forEach(sequence -> {
                     Reservation reservation = new Reservation();
                     reservation.setRoom(room);
                     reservation.setDay(finalDay);
                     reservation.setUser(user);
                     reservation.setRepeatCount(repeatCount);
-                    reservation.setCellSequence(sequence);
+                    reservation.setRowSequence(sequence);
                     super.entityManager.persist(reservation);
                     result.add(reservation);
                 });
 
-                entityManager.flush();
-                entityManager.clear();
             }
+            entityManager.flush();
+            entityManager.clear();
 
             return result;
         } catch (ConstraintViolationException e) {

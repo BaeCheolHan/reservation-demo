@@ -33,7 +33,7 @@ public class CalendarBuilderTest {
         for (int i = 0; i < 2; i++) {
             Reservation reservation = new Reservation();
             reservation.setId(Integer.valueOf(i).longValue());
-            reservation.setCellSequence(i);
+            reservation.setRowSequence(i);
             reservations.add(reservation);
         }
 

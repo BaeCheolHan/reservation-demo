@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ReservationCustomDAO {
 
-    boolean hasConflict(Long roomId, LocalDate day, List<Integer> cellSequences);
+    boolean hasConflict(Long roomId, LocalDate day, List<Integer> rowSequence);
 
-    List<Reservation> bulkInsert(List<Integer> cellSequences, Integer repeatCount, LocalDate day, Room room, User user);
+    List<Reservation> bulkInsert(List<Integer> rowSequence, Integer repeatCount, LocalDate day, Room room, User user);
 }

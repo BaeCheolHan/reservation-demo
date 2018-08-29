@@ -50,18 +50,18 @@ public class ReservationService {
 
     public List<Reservation> create(Long roomId, Long userId, LocalDate day, LocalTime startTime, LocalTime endTime, Integer repeatCount) {
 
-        List<Integer> timeTableSequence = TimeUtils.getTimeTableSequence(startTime, endTime);
+        List<Integer> rowSequences = TimeUtils.getTimeTableSequence(startTime, endTime);
 
         for (Integer week = 0; week <= repeatCount; week++) {
             final LocalDate finalDay = day.plusWeeks(week);
-            if (dao.hasConflict(roomId, finalDay, timeTableSequence)) {
+            if (dao.hasConflict(roomId, finalDay, rowSequences)) {
                 throw new ConflictException(roomId, Reservation.class);
             }
         }
 
         Room room = roomService.findById(roomId);
         User user = userService.findById(userId);
-        return dao.bulkInsert(timeTableSequence, repeatCount, day, room, user);
+        return dao.bulkInsert(rowSequences, repeatCount, day, room, user);
 
     }
 }

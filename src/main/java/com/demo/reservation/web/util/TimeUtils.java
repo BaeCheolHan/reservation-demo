@@ -30,11 +30,11 @@ public class TimeUtils {
         return sequences;
     }
 
-    /**
-     * value : start time to minutes / 30
-     * ex ) : 13:00 ~ 13:30  -> 13 * 60 / 30 = 26
-     * 13 = 26 / 60 * 30
-     */
+    public static boolean validMinute(LocalTime localTime) {
+
+        return localTime.getMinute() == 0 || localTime.getMinute() == 30;
+    }
+
     public static String sequenceToTimeStr(Integer sequence) {
 
         LocalTime current = TimeUtils.setZeroAfterDay(LocalTime.now());
@@ -43,11 +43,6 @@ public class TimeUtils {
         LocalTime endTime = startTime.plusMinutes(30);
 
         return String.format("%s ~ %s", startTime.format(DateTimeFormatter.ofPattern("HH:mm")), endTime.format(DateTimeFormatter.ofPattern("HH:mm")));
-    }
-
-    public static boolean validMinute(LocalTime localTime) {
-
-        return localTime.getMinute() == 0 || localTime.getMinute() == 30;
     }
 
     public static boolean validRange(LocalTime startTime, LocalTime endTime) {

@@ -106,7 +106,7 @@ public class CalendarBuilder {
             reservations.forEach(reservation -> {
                 List<Row> rows = calendar.getRows();
                 //find row
-                Row row = rows.get(reservation.getCellSequence());
+                Row row = rows.get(reservation.getRowSequence());
 
                 //find cell
                 Cell cell = row.getCells()
@@ -115,7 +115,7 @@ public class CalendarBuilder {
                         .filter(c -> c.getRoomId().equals(reservation.getRoom().getId()))
                         .findFirst()
                         .orElseThrow(() -> new InternalException(String.format("could not found matched cell for [ %s / %s ]", reservation.getRoom().getName(),
-                                TimeUtils.sequenceToTimeStr(reservation.getCellSequence()))
+                                TimeUtils.sequenceToTimeStr(reservation.getRowSequence()))
                                 )
                         );
 
